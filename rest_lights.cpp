@@ -221,6 +221,8 @@ bool DeRestPluginPrivate::lightToMap(const ApiRequest &req, const LightNode *lig
     }
 
     QVariantMap state;
+    QVariantMap capabilities;
+    QVariantMap control;
     QVariantMap ct;
     const ResourceItem *ix = nullptr;
     const ResourceItem *iy = nullptr;
@@ -320,7 +322,9 @@ bool DeRestPluginPrivate::lightToMap(const ApiRequest &req, const LightNode *lig
     }
 
     map["state"] = state;
-    map["ct"] = ct;
+    control["ct"] = ct;
+    capabilities["control"] = control;
+    map["capabilities"] = capabilities;
     return true;
 }
 
