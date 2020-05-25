@@ -221,9 +221,6 @@ bool DeRestPluginPrivate::lightToMap(const ApiRequest &req, const LightNode *lig
     }
 
     QVariantMap state;
-    QVariantMap capabilities;
-    QVariantMap control;
-    QVariantMap ct;
     const ResourceItem *ix = nullptr;
     const ResourceItem *iy = nullptr;
 
@@ -251,8 +248,8 @@ bool DeRestPluginPrivate::lightToMap(const ApiRequest &req, const LightNode *lig
         else if (item->descriptor().suffix == RStateTilt) { state["tilt"] = item->toNumber(); }
         else if (item->descriptor().suffix == RStateLift) { state["lift"] = item->toNumber(); }
         else if (item->descriptor().suffix == RStateReachable) { state["reachable"] = item->toBool(); }
-        else if (item->descriptor().suffix == RConfigCtMin) { ct["min"] = item->toNumber(); }
-        else if (item->descriptor().suffix == RConfigCtMax) { ct["max"] = item->toNumber(); }
+        else if (item->descriptor().suffix == RConfigCtMin) { map["ctmin"] = item->toNumber(); }
+        else if (item->descriptor().suffix == RConfigCtMax) { map["ctmax"] = item->toNumber(); }
         else if (item->descriptor().suffix == RConfigPowerup) { map["powerup"] = item->toNumber(); }
         else if (item->descriptor().suffix == RConfigPowerOnLevel) { map["poweronlevel"] = item->toNumber(); }
         else if (item->descriptor().suffix == RConfigPowerOnCt) { map["poweronct"] = item->toNumber(); }
@@ -322,9 +319,6 @@ bool DeRestPluginPrivate::lightToMap(const ApiRequest &req, const LightNode *lig
     }
 
     map["state"] = state;
-    control["ct"] = ct;
-    capabilities["control"] = control;
-    map["capabilities"] = capabilities;
     return true;
 }
 
@@ -675,6 +669,14 @@ int DeRestPluginPrivate::setLightState(const ApiRequest &req, ApiResponse &rsp)
                     valueOk = true;
                     hasCt = true;
                     targetCt = ct;
+                } else if (ok && ct < ctMin) {
+                    valueOk = true;
+                    hasCt = true;
+                    targetCt = ctMin;
+                } else if (ok && ct > ctMax) {
+                    valueOk = true;
+                    hasCt = true;
+                    targetCt = ctMax;
                 }
             }
         }
