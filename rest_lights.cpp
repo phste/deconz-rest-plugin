@@ -664,19 +664,11 @@ int DeRestPluginPrivate::setLightState(const ApiRequest &req, ApiResponse &rsp)
                 item = taskRef.lightNode->item(RConfigCtMax);
                 const quint16 ctMax = item ? item->toNumber() : 500;
                 const int ct = map[param].toInt(&ok);
-                if (ok && ct >= ctMin && ct <= ctMax)
+                if (ok && ct >= 153 && ct <= 500)
                 {
                     valueOk = true;
                     hasCt = true;
                     targetCt = ct;
-                } else if (ok && ct < ctMin) {
-                    valueOk = true;
-                    hasCt = true;
-                    targetCt = ctMin;
-                } else if (ok && ct > ctMax) {
-                    valueOk = true;
-                    hasCt = true;
-                    targetCt = ctMax;
                 }
             }
         }
